@@ -2,19 +2,18 @@
 
 ## Installation
 
-Install [OpenCC](https://github.com/BYVoid/OpenCC).
+1. Install [OpenCC](https://github.com/BYVoid/OpenCC), see [link](https://github.com/BYVoid/OpenCC/wiki/Download).
 
-```sh
-sudo pacman -S opencc
-```
-
-Install `opencc.nvim`.
+2. Install `opencc.nvim`.
 
 [packer.nvim](https://github.com/wbthomason/packer.nvim)
 
 ```lua
 use {
   'stvhuang/opencc.nvim',
+  config=function()
+    require('opencc').setup {}
+  end
   cmd={
     'OpenCChk2s',
     'OpenCCjp2t',
@@ -29,3 +28,7 @@ use {
   }
 }
 ```
+
+## Usage
+
+TODO
