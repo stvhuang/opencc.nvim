@@ -1,6 +1,6 @@
 local M = {}
 
-M.format = function(conv)
+M.convert = function(conv)
   local buffer = vim.api.nvim_get_current_buf()
 
   -- path = parent + name
@@ -45,16 +45,16 @@ M.format = function(conv)
 end
 
 M.make_commands = function()
-  vim.cmd [[command! OpenCChk2s  lua require('opencc').format('hk2s')]]
-  vim.cmd [[command! OpenCCjp2t  lua require('opencc').format('jp2t')]]
-  vim.cmd [[command! OpenCCs2hk  lua require('opencc').format('s2hk')]]
-  vim.cmd [[command! OpenCCs2t   lua require('opencc').format('s2t')]]
-  vim.cmd [[command! OpenCCs2tw  lua require('opencc').format('s2tw')]]
-  vim.cmd [[command! OpenCCt2hk  lua require('opencc').format('t2hk')]]
-  vim.cmd [[command! OpenCCt2jp  lua require('opencc').format('t2jp')]]
-  vim.cmd [[command! OpenCCt2s   lua require('opencc').format('t2s')]]
-  vim.cmd [[command! OpenCCtw2s  lua require('opencc').format('tw2s')]]
-  vim.cmd [[command! OpenCCtw2t  lua require('opencc').format('tw2t')]]
+  vim.cmd [[command! OpenCChk2s  lua require('opencc').convert('hk2s')]]
+  vim.cmd [[command! OpenCCjp2t  lua require('opencc').convert('jp2t')]]
+  vim.cmd [[command! OpenCCs2hk  lua require('opencc').convert('s2hk')]]
+  vim.cmd [[command! OpenCCs2t   lua require('opencc').convert('s2t')]]
+  vim.cmd [[command! OpenCCs2tw  lua require('opencc').convert('s2tw')]]
+  vim.cmd [[command! OpenCCt2hk  lua require('opencc').convert('t2hk')]]
+  vim.cmd [[command! OpenCCt2jp  lua require('opencc').convert('t2jp')]]
+  vim.cmd [[command! OpenCCt2s   lua require('opencc').convert('t2s')]]
+  vim.cmd [[command! OpenCCtw2s  lua require('opencc').convert('tw2s')]]
+  vim.cmd [[command! OpenCCtw2t  lua require('opencc').convert('tw2t')]]
 end
 
 M.setup = function(config)
