@@ -12,7 +12,6 @@ M.format = function(conv)
   if parent == '' then
     parent = '.'
   end
-
   local tmp_name = string.format('%s_%d_%s', '~opencc', math.random(1, 1000000),
                                  name)
   local tmp_path = parent .. '/' .. tmp_name
@@ -30,8 +29,6 @@ M.format = function(conv)
   io_write:close()
 
   -- convert the temporary file
-  -- os.execute('opencc -c ' .. conv .. ' -i ' .. tmp_path .. ' -o ' ..
-  -- tmp_path)
   os.execute(string.format('opencc -c %s -i %s -o %s', conv, tmp_path, tmp_path))
 
   -- load the converted file and then remove it
