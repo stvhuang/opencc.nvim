@@ -1,43 +1,50 @@
 local M = {}
 
-M.format = function(conversion)
+M.format = function(conv)
   local buffer = vim.api.nvim_get_current_buf()
 
-  local fullpath = vim.api.nvim_buf_get_name(buffer)
-
-  local split_fullpath = vim.split(fullpath, '/')
-  local temp_filename = string.format('%s_%d_%s', '~opencc',
-                                      math.random(1, 1000000),
-                                      split_fullpath[#split_fullpath])
-
-  split_fullpath[#split_fullpath] = nil
-  local temp_parents = table.concat(split_fullpath, '/')
-  if temp_parents == '' then
-    temp_parents = '.'
+  -- path = parent + name
+  local path = vim.api.nvim_buf_get_name(buffer)
+  local split_path = vim.split(path, '/')
+  local name = split_path[#split_path]
+  split_path[#split_path] = nil
+  local parent = table.concat(split_path, '/')
+  if parent == '' then
+    parent = '.'
   end
-  local temp_fullpath = temp_parents .. '/' .. temp_filename
 
+  local tmp_name = string.format('%s_%d_%s', '~opencc', math.random(1, 1000000),
+                                 name)
+  local tmp_path = parent .. '/' .. tmp_name
+
+  -- read buffer content
   local lines = vim.api.nvim_buf_get_lines(buffer, 0, -1, false)
-  local temp_io = io.open(temp_fullpath, 'w+')
+
+  -- write buffer content to the temporary file
+  local io_write = io.open(tmp_path, 'w+')
   for _, line in pairs(lines) do
-    temp_io:write(line)
-    temp_io:write('\n')
+    io_write:write(line)
+    io_write:write('\n')
   end
-  temp_io:flush()
-  temp_io:close()
+  io_write:flush()
+  io_write:close()
 
-  os.execute('opencc -c ' .. conversion .. ' -i ' .. temp_fullpath .. ' -o ' ..
-                 temp_fullpath)
+  -- convert the temporary file
+  -- os.execute('opencc -c ' .. conv .. ' -i ' .. tmp_path .. ' -o ' ..
+  -- tmp_path)
+  os.execute(string.format('opencc -c %s -i %s -o %s', conv, tmp_path, tmp_path))
 
-  local converted_io = io.open(temp_fullpath, 'r')
-  local converted_lines = {}
-  for line in converted_io:lines() do
-    table.insert(converted_lines, line)
+  -- load the converted file and then remove it
+  local io_read = io.open(tmp_path, 'r')
+  local conv_lines = {}
+  for line in io_read:lines() do
+    table.insert(conv_lines, line)
   end
-  converted_io:close()
-  os.remove(temp_fullpath)
+  io_read:close()
+  os.remove(tmp_path)
 
-  vim.api.nvim_buf_set_lines(buffer, 0, -1, false, converted_lines)
+  -- writed the content of the converted file to the buffer
+  vim.api.nvim_buf_set_lines(buffer, 0, -1, false, conv_lines)
 end
 
 M.make_commands = function()
