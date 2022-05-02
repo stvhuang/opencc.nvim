@@ -45,13 +45,34 @@ M.convert = function(config)
   api.nvim_buf_set_lines(buffer, 0, -1, false, converted_lines)
 end
 
+M.pinned = { "t2s", "s2t" }
+M.pinned_idx = 1
+M.pinned_cycle = function()
+  if #M.pinned ~= 0 then
+    local config = M.pinned[M.pinned_idx]
+
+    M.pinned_idx = M.pinned_idx + 1
+
+    if M.pinned_idx > #M.pinned then
+      M.pinned_idx = 1
+    end
+
+    M.convert(config)
+  end
+end
+
 M.create_user_command = function()
   api.nvim_create_user_command("OpenCC", function(opts)
     M.convert(opts.args)
   end, { nargs = 1 })
+
+  api.nvim_create_user_command("OpenCC", function()
+    M.pinned_cycle()
+  end, { nargs = 0 })
 end
 
-M.setup = function()
+M.setup = function(args)
+  M.pinned = args.pinned or M.pinned
   M.create_user_command()
 end
 
